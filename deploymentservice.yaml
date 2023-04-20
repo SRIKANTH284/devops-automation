@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment # Kubernetes resource kind we are creating
+metadata:
+  name: spring-boot-k8s-deployment
+spec:
+  selector:
+    matchLabels:
+      app: spring-boot-k8s
+  replicas: 2 # Number of replicas that will be created for this deployment
+  template:
+    metadata:
+      labels:
+        app: spring-boot-k8s
+    spec:
+      containers:
+        - name: spring-boot-k8s
+          image: srikanth970/kubernetes # Image that will be used to containers in the cluster
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080 # The port that the container is running on in the cluster
+
+
+---
+apiVersion: v1
+kind: Service 
+metadata: 
+  name: springboot-k8ssvc
+spec:
+  type: NodePort
+  selector:
+    app: spring-boot-k8s
+  ports:
+    - nodePort: 30163
+      port: 8080 
+      targetPort: 8080
